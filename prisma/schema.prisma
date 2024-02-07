@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model LandingPage {
+  id                  Int         @id @default(autoincrement())
+  externalId          String      @unique
+  tagline             String
+  tagline_description String
+  name                String
+  description         String
+  socials             Social[]
+  reviews             Review[]
+  keyPoints           KeyPoints[]
+  faq                 Faq[]
+}
+
+model Social {
+  id            Int         @id @default(autoincrement())
+  name          String
+  url           String      @unique
+  landingPageId Int
+  landingPage   LandingPage @relation(fields: [landingPageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Review {
+  id            Int         @id @default(autoincrement())
+  videourl      String
+  landingPageId Int
+  landingPage   LandingPage @relation(fields: [landingPageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model KeyPoints {
+  id            Int         @id @default(autoincrement())
+  title         String
+  landingPageId Int
+  landingPage   LandingPage @relation(fields: [landingPageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Faq {
+  id            Int         @id @default(autoincrement())
+  question      String
+  answer        String
+  landingPageId Int
+  landingPage   LandingPage @relation(fields: [landingPageId], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model RequestingArtist {
+  id             Int      @id @default(autoincrement())
+  name           String
+  stage_name     String
+  phonenumber    String   @unique
+  description    String
+  email          String
+  genre          String
+  request_status String   @default("pending")
+  created_at     DateTime @default(now())
+}
